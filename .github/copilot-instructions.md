@@ -5,7 +5,7 @@ This repository contains various special purpose toolboxes as container images.
 ## Repository Structure
 
 - `base/` - Base Docker image with common dependencies
-- Each toolbox directory contains its own Dockerfile and configuration files
+- Each toolbox directory contains its own `Dockerfile` and configuration files
 
 ## Guidelines for Contributing
 
@@ -27,6 +27,6 @@ This repository contains various special purpose toolboxes as container images.
 
 ### Code Style
 
-- Use lowercase for Dockerfile instructions
+- Use uppercase for Dockerfile instructions (e.g., `FROM`, `RUN`, `COPY`)
 - Add comments for complex or non-obvious configurations
 - Keep files clean and well-organized
