@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
   ca-certificates=20250419\
-  curl=8.14.1-2+deb13u2 &&\
+  curl=8.14.1-2+deb13u2 \
+  zsh=5.9-8+b14 &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*
 
@@ -20,6 +21,6 @@ RUN apt-get update &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r toolsmith && useradd -m -s /bin/bash -g toolsmith toolsmith
+RUN groupadd -r toolsmith && useradd -m -s /bin/zsh -g toolsmith toolsmith
 
 USER toolsmith
