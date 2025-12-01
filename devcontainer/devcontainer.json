@@ -1,0 +1,20 @@
+{
+  "name": "Toolbox Development Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "BASE_IMAGE_TAG": "latest"
+    }
+  },
+  "remoteUser": "toolsmith",
+  "containerUser": "toolsmith",
+  "updateRemoteUserUID": true,
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": []
+    }
+  }
+}
