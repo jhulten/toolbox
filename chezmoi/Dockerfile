@@ -25,11 +25,15 @@ RUN mise use --global aqua:twpayne/chezmoi@${CHEZMOI_VERSION}
 #
 # For private repos with SSH:
 #   docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@github.com:user/dotfiles.git
+#   docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@gitlab.com:user/dotfiles.git
 ARG CHEZMOI_REPO=""
 RUN --mount=type=ssh \
-  mkdir -p ~/.ssh && \
-  ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null || true && \
   if [ -n "$CHEZMOI_REPO" ]; then \
+    if echo "$CHEZMOI_REPO" | grep -q "^git@"; then \
+      mkdir -p ~/.ssh && \
+      GIT_HOST=$(echo "$CHEZMOI_REPO" | sed -E 's|^git@([^:]+):.*|\1|') && \
+      ssh-keyscan "$GIT_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true; \
+    fi && \
     chezmoi init --apply "$CHEZMOI_REPO"; \
   fi
 

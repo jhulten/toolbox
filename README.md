@@ -26,7 +26,11 @@ docker build --build-arg CHEZMOI_REPO=https://github.com/username/dotfiles.git -
 
 Build and initialize with a private dotfiles repo using SSH keys:
 ```bash
+# For GitHub
 docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@github.com:username/dotfiles.git -t my-chezmoi ./chezmoi
+
+# For GitLab or other Git hosts
+docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@gitlab.com:username/dotfiles.git -t my-chezmoi ./chezmoi
 ```
 
 Build and initialize with a private dotfiles repo using token:
