@@ -18,9 +18,19 @@ RUN mise use --global aqua:twpayne/chezmoi@${CHEZMOI_VERSION}
 # Optional: Initialize chezmoi with a dotfiles repo
 # WARNING: This will execute code from the dotfiles repository during build.
 # Only use with trusted repositories.
+#
+# For public repos or repos with token:
+#   docker build --build-arg CHEZMOI_REPO=https://github.com/user/dotfiles.git
+#   docker build --build-arg CHEZMOI_REPO=https://token@github.com/user/dotfiles.git
+#
+# For private repos with SSH:
+#   docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@github.com:user/dotfiles.git
 ARG CHEZMOI_REPO=""
-RUN if [ -n "$CHEZMOI_REPO" ]; then \
-  chezmoi init --apply "$CHEZMOI_REPO"; \
+RUN --mount=type=ssh \
+  mkdir -p ~/.ssh && \
+  ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null || true && \
+  if [ -n "$CHEZMOI_REPO" ]; then \
+    chezmoi init --apply "$CHEZMOI_REPO"; \
   fi
 
 CMD ["/bin/zsh"]

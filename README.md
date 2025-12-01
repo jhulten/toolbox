@@ -19,9 +19,19 @@ Build without initializing a dotfiles repo:
 docker build -t my-chezmoi ./chezmoi
 ```
 
-Build and initialize with a dotfiles repo:
+Build and initialize with a public dotfiles repo:
 ```bash
 docker build --build-arg CHEZMOI_REPO=https://github.com/username/dotfiles.git -t my-chezmoi ./chezmoi
+```
+
+Build and initialize with a private dotfiles repo using SSH keys:
+```bash
+docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@github.com:username/dotfiles.git -t my-chezmoi ./chezmoi
+```
+
+Build and initialize with a private dotfiles repo using token:
+```bash
+docker build --build-arg CHEZMOI_REPO=https://token@github.com/username/dotfiles.git -t my-chezmoi ./chezmoi
 ```
 
 > [!WARNING]
