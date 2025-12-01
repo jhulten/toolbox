@@ -17,11 +17,9 @@ RUN apt-get update &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*
 
-# Install chezmoi
+# Install chezmoi using the official installation script
 ARG CHEZMOI_VERSION=2.56.1
-RUN curl -sfL https://github.com/twpayne/chezmoi/releases/download/v${CHEZMOI_VERSION}/chezmoi_${CHEZMOI_VERSION}_linux_amd64.tar.gz | \
-  tar -xz -C /usr/local/bin chezmoi &&\
-  chmod +x /usr/local/bin/chezmoi
+RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin -t v${CHEZMOI_VERSION}
 
 USER toolsmith
 WORKDIR /home/toolsmith
