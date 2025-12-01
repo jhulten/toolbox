@@ -10,8 +10,8 @@ set -euo pipefail
 
 DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/jhulten/dotfiles.git}"
 DOTFILES_BRANCH="${DOTFILES_BRANCH:-main}"
-DOTFILES_DIR="${DOTFILES_DIR:-/home/toolbox/.dotfiles}"
-USER="toolbox"
+DOTFILES_DIR="${DOTFILES_DIR:-/home/toolsmith/.dotfiles}"
+USER="toolsmith"
 HOME_DIR="/home/${USER}"
 
 # Helper to run commands as non-root user

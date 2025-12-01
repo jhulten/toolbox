@@ -3,7 +3,7 @@
 This toolbox image clones and keeps your dotfiles repo up-to-date at container startup, then runs any setup scripts found in the repo and drops you into an interactive shell as an unprivileged user.
 
 Key points:
-- Uses a non-root user `toolbox` (UID 1000) to own dotfiles and run the shell.
+- Uses a non-root user `toolsmith` to own dotfiles and run the shell.
 - Default dotfiles repo: `https://github.com/jhulten/dotfiles.git` (you can override at build/run time).
 - Supports typical bootstrap file names: `install.sh`, `bootstrap.sh`, `setup.sh`, `Makefile` `install` target, or `fresh install` if `fresh` is available in the image.
 - On subsequent container runs, the repo will be `git fetch`ed and `git pull --ff-only` will be attempted to update the checkout.
@@ -26,7 +26,7 @@ How to run
 For a public repo:
 ```
 docker run --rm -it \
-  -v ~/.gitconfig:/home/toolbox/.gitconfig:ro \
+  -v ~/.gitconfig:/home/toolsmith/.gitconfig:ro \
   toolbox-dotfiles
 ```
 
@@ -34,8 +34,8 @@ For a private repo (recommended approach):
 - Use an SSH key with read-only access and mount it at runtime. Example (use with care):
 ```
 docker run --rm -it \
-  -v ~/.ssh/id_rsa:/home/toolbox/.ssh/id_rsa:ro \
-  -e GIT_SSH_COMMAND="ssh -i /home/toolbox/.ssh/id_rsa -o IdentitiesOnly=yes" \
+  -v ~/.ssh/id_rsa:/home/toolsmith/.ssh/id_rsa:ro \
+  -e GIT_SSH_COMMAND="ssh -i /home/toolsmith/.ssh/id_rsa -o IdentitiesOnly=yes" \
   toolbox-dotfiles
 ```
 Alternative: use a deploy key or a GitHub access token in the DOTFILES_REPO URL (`https://token@github.com/owner/repo.git`) but be careful with secrets.

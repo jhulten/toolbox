@@ -1,23 +1,25 @@
-FROM debian:13-slim
+ARG BASE_IMAGE_TAG=latest
+FROM ghcr.io/jhulten/toolbox/base:${BASE_IMAGE_TAG}
+
 LABEL maintainer="jhulten"
 
 ARG DOTFILES_REPO="https://github.com/jhulten/dotfiles.git"
 ARG DOTFILES_BRANCH="main"
-ARG DOTFILES_DIR="/home/toolbox/.dotfiles"
+ARG DOTFILES_DIR="/home/toolsmith/.dotfiles"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DOTFILES_REPO=${DOTFILES_REPO} \
     DOTFILES_BRANCH=${DOTFILES_BRANCH} \
     DOTFILES_DIR=${DOTFILES_DIR} \
-    HOME=/home/toolbox \
-    USER=toolbox
+    HOME=/home/toolsmith \
+    USER=toolsmith
 
-# Install runtime dependencies (git, curl, ca-certificates, zsh optional)
+USER root
+
+# Install runtime dependencies (git, zsh, sudo, locales)
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
         git \
-        curl \
-        ca-certificates \
         zsh \
         sudo \
         locales \
@@ -25,17 +27,17 @@ RUN apt-get update \
  && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/*
 
-# Create an unprivileged user to own dotfiles and run the shell
-RUN useradd -m -s /bin/bash -u 1000 toolbox \
- && echo "toolbox ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/toolbox \
- && chmod 0440 /etc/sudoers.d/toolbox
+# Grant sudo access to toolsmith user
+RUN echo "toolsmith ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/toolsmith \
+ && chmod 0440 /etc/sudoers.d/toolsmith
 
 # Copy entrypoint and make executable
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh \
- && chown toolbox:toolbox /usr/local/bin/entrypoint.sh
+ && chown toolsmith:toolsmith /usr/local/bin/entrypoint.sh
 
-WORKDIR /home/toolbox
+USER toolsmith
+WORKDIR /home/toolsmith
 
 # Default entrypoint will clone/update dotfiles and drop to shell/command as the toolbox user
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
