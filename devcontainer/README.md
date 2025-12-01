@@ -1,6 +1,6 @@
 # Toolbox Devcontainer
 
-A development container image with git, SSH, GPG, and locale support built on Debian 13 (slim).
+A development container image with git, SSH, GPG, and locale support. Built on the [toolbox base image](../base), which uses Debian 13 (slim) as its foundation.
 
 ## Image Details
 
@@ -29,7 +29,7 @@ A development container image with git, SSH, GPG, and locale support built on De
    cp devcontainer.json .devcontainer/
    ```
 
-3. Modify the `devcontainer.json` to reference the pre-built image instead of building locally:
+3. Modify the `devcontainer.json` to reference the pre-built image instead of building locally (replace the `build` section with `image`):
 
    ```json
    {
@@ -48,6 +48,8 @@ A development container image with git, SSH, GPG, and locale support built on De
      }
    }
    ```
+
+   Alternatively, keep the original `devcontainer.json` to build the image locally from the Dockerfile.
 
 4. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and select **Dev Containers: Reopen in Container**
 
