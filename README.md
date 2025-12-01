@@ -1,2 +1,48 @@
 # toolbox
 Various special purpose toolboxes as container images
+
+## Available Toolboxes
+
+### Base
+Base toolbox image with common dependencies (ca-certificates, curl, git, zsh, mise).
+
+### Devcontainer
+Development container image with SSH, GPG, and locale support.
+
+### Chezmoi
+Container image with chezmoi for dotfiles management. Supports optional initialization with a dotfiles repository.
+
+#### Usage
+
+Build without initializing a dotfiles repo:
+```bash
+docker build -t my-chezmoi ./chezmoi
+```
+
+Build and initialize with a public dotfiles repo:
+```bash
+docker build --build-arg CHEZMOI_REPO=https://github.com/username/dotfiles.git -t my-chezmoi ./chezmoi
+```
+
+Build and initialize with a private dotfiles repo using SSH keys:
+```bash
+# For GitHub
+docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@github.com:username/dotfiles.git -t my-chezmoi ./chezmoi
+
+# For GitLab or other Git hosts
+docker buildx build --ssh default --build-arg CHEZMOI_REPO=git@gitlab.com:username/dotfiles.git -t my-chezmoi ./chezmoi
+```
+
+Build and initialize with a private dotfiles repo using token:
+```bash
+docker build --build-arg CHEZMOI_REPO=https://token@github.com/username/dotfiles.git -t my-chezmoi ./chezmoi
+```
+
+> [!WARNING]
+> Using `CHEZMOI_REPO` will execute code from the dotfiles repository during the build process. Only use with trusted repositories.
+
+Run the container:
+```bash
+docker run -it my-chezmoi
+```
+

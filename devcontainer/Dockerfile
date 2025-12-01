@@ -12,7 +12,6 @@ USER root
 
 RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
-  git=1:2.47.3-0+deb13u1 \
   openssh-client=1:10.0p1-7 \
   gnupg=2.4.7-21 \
   locales=2.41-12 &&\
