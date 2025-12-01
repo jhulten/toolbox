@@ -8,14 +8,12 @@ LABEL org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-USER root
+USER toolsmith
+WORKDIR /home/toolsmith
 
 # Install chezmoi using mise
 ARG CHEZMOI_VERSION=2.56.1
 RUN mise use --global aqua:twpayne/chezmoi@${CHEZMOI_VERSION}
-
-USER toolsmith
-WORKDIR /home/toolsmith
 
 # Optional: Initialize chezmoi with a dotfiles repo
 # WARNING: This will execute code from the dotfiles repository during build.
