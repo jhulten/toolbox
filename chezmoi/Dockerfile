@@ -22,5 +22,5 @@ WORKDIR /home/toolsmith
 # Only use with trusted repositories.
 ARG CHEZMOI_REPO=""
 RUN if [ -n "$CHEZMOI_REPO" ]; then \
-  chezmoi init --apply "$CHEZMOI_REPO" || exit 1; \
+  chezmoi init --apply "$CHEZMOI_REPO"; \
   fi
