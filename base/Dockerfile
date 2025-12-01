@@ -11,7 +11,7 @@ RUN apt-get update &&\
 
 RUN sed -i 's/http:/https:/' /etc/apt/sources.list.d/*
 
-ADD https://mise.jdx.dev/gpg-key.pub /etc/apt/keyrings/mise-archive-keyring.pub
+ADD --chmod=755 https://mise.jdx.dev/gpg-key.pub /etc/apt/keyrings/mise-archive-keyring.pub
 COPY apt/mise.list /etc/apt/sources.list.d/
 
 RUN apt-get update &&\
