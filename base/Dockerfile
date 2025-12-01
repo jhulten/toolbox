@@ -6,6 +6,7 @@ RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
   ca-certificates=20250419\
   curl=8.14.1-2+deb13u2 \
+  git=1:2.47.3-0+deb13u1 \
   zsh=5.9-8+b14 &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*

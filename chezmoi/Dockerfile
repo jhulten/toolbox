@@ -10,13 +10,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 USER root
 
-# Install git (required by chezmoi)
-RUN apt-get update &&\
-  apt-get install --no-install-recommends -y \
-  git=1:2.47.3-0+deb13u1 &&\
-  apt-get clean -y &&\
-  rm -rf /var/lib/apt/lists/*
-
 # Install chezmoi using the official installation script
 ARG CHEZMOI_VERSION=2.56.1
 RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin -t v${CHEZMOI_VERSION}
