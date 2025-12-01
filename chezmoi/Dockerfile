@@ -18,7 +18,9 @@ USER toolsmith
 WORKDIR /home/toolsmith
 
 # Optional: Initialize chezmoi with a dotfiles repo
+# WARNING: This will execute code from the dotfiles repository during build.
+# Only use with trusted repositories.
 ARG CHEZMOI_REPO=""
 RUN if [ -n "$CHEZMOI_REPO" ]; then \
-  chezmoi init --apply "$CHEZMOI_REPO"; \
+  chezmoi init --apply "$CHEZMOI_REPO" || exit 1; \
   fi
