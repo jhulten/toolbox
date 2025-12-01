@@ -7,7 +7,7 @@ Various special purpose toolboxes as container images
 Base toolbox image with common dependencies (ca-certificates, curl, git, zsh, mise).
 
 ### Devcontainer
-Development container image with git, SSH, GPG, and locale support.
+Development container image with SSH, GPG, and locale support.
 
 ### Chezmoi
 Container image with chezmoi for dotfiles management. Supports optional initialization with a dotfiles repository.
@@ -29,6 +29,6 @@ docker build --build-arg CHEZMOI_REPO=https://github.com/username/dotfiles.git -
 
 Run the container:
 ```bash
-docker run -it my-chezmoi zsh
+docker run -it my-chezmoi
 ```
 

@@ -10,9 +10,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 USER root
 
-# Install chezmoi using the official installation script
+# Install chezmoi using mise
 ARG CHEZMOI_VERSION=2.56.1
-RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin -t v${CHEZMOI_VERSION}
+RUN mise use --global aqua:twpayne/chezmoi@${CHEZMOI_VERSION}
 
 USER toolsmith
 WORKDIR /home/toolsmith
@@ -24,3 +24,5 @@ ARG CHEZMOI_REPO=""
 RUN if [ -n "$CHEZMOI_REPO" ]; then \
   chezmoi init --apply "$CHEZMOI_REPO"; \
   fi
+
+CMD ["/bin/zsh"]
