@@ -20,3 +20,6 @@ RUN apt-get update &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*
 
+RUN groupadd -r toolsmith && useradd -m -s /bin/bash -g toolsmith toolsmith
+
+USER toolsmith
