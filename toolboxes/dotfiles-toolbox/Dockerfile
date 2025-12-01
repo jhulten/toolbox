@@ -39,7 +39,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
 USER toolsmith
 WORKDIR /home/toolsmith
 
-# Default entrypoint will clone/update dotfiles and drop to shell/command as the toolbox user
+# Default entrypoint will clone/update dotfiles and drop to shell/command as the toolsmith user
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # Default to an interactive shell when no command provided
 CMD ["bash"]
