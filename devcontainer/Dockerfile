@@ -1,4 +1,5 @@
-FROM ghcr.io/jhulten/toolbox/base:latest
+ARG BASE_IMAGE_TAG=latest
+FROM ghcr.io/jhulten/toolbox/base:${BASE_IMAGE_TAG}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
