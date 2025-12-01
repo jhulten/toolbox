@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
-  ca-certificates=2025041\
+  ca-certificates=20250419\
   curl=8.14.1-2+deb13u2 &&\
   apt-get clean -y &&\
   rm -rf /var/lib/apt/lists/*
