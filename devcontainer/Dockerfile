@@ -25,5 +25,8 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD git --version || exit 1
+
 USER toolsmith
 WORKDIR /home/toolsmith
