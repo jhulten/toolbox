@@ -3,7 +3,7 @@ FROM ghcr.io/jhulten/toolbox/base:${BASE_IMAGE_TAG}
 
 LABEL org.opencontainers.image.title="Toolbox Devcontainer"
 LABEL org.opencontainers.image.description="Development container image with git, SSH, GPG, and locale support"
-LABEL org.opencontainers.image.source="https://github.com/jhulten/toolbox"
+LABEL org.opencontainers.image.source="https://github.com/jhulten/toolbox/blob/main/devcontainer/Dockerfile"
 LABEL org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive
