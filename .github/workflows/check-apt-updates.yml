@@ -39,28 +39,51 @@ jobs:
               return
             fi
             
-            # Create a temporary container to check package versions
+            # Collect package names and their current (pinned) versions
+            local pkg_names=()
+            local current_versions=()
+            
             for pkg_version in $packages; do
-              pkg_name=$(echo "$pkg_version" | cut -d= -f1)
-              current_version=$(echo "$pkg_version" | cut -d= -f2)
+              pkg_names+=("$(echo "$pkg_version" | cut -d= -f1)")
+              current_versions+=("$(echo "$pkg_version" | cut -d= -f2)")
+            done
+            
+            echo "Found ${#pkg_names[@]} pinned packages:"
+            for idx in "${!pkg_names[@]}"; do
+              echo "  - ${pkg_names[$idx]} (current: ${current_versions[$idx]})"
+            done
+            
+            # Query the package repository for available versions in a single container run
+            available_output=$(docker run --rm "$base_image" sh -c '
+              set -e
+              apt-get update -qq 2>/dev/null
+              for pkg in "$@"; do
+                candidate=$(
+                  apt-cache policy "$pkg" 2>/dev/null | \
+                  grep -A1 "Candidate:" | \
+                  tail -1 | \
+                  awk "{print \$2}"
+                )
+                echo "${candidate}"
+              done
+            ' sh "${pkg_names[@]}" || echo "")
+            
+            # Read available versions into an array, preserving order
+            IFS=$'\n' read -r -d '' -a available_versions < <(printf '%s\0' $available_output || printf '\0')
+            
+            # Compare current and available versions
+            for idx in "${!pkg_names[@]}"; do
+              pkg_name=${pkg_names[$idx]}
+              current_version=${current_versions[$idx]}
+              available="${available_versions[$idx]}"
               
               echo "Checking $pkg_name (current: $current_version)..."
-              
-              # Query the package repository for available versions
-              available=$(docker run --rm "$base_image" sh -c "
-                apt-get update -qq 2>/dev/null && 
-                apt-cache policy $pkg_name 2>/dev/null | 
-                grep -A1 'Candidate:' | 
-                tail -1 | 
-                awk '{print \$2}'
-              " || echo "")
               
               if [ -z "$available" ]; then
                 results="${results}\n- **$pkg_name**: Could not determine available version"
                 continue
               fi
               
-              # Compare versions
               if [ "$current_version" != "$available" ]; then
                 results="${results}\n- **$pkg_name**: $current_version → $available"
                 echo "  Update available: $current_version → $available"
