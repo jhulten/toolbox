@@ -95,11 +95,14 @@ jobs:
             echo "$results"
           }
           
-          # Check base Dockerfile
+          # Build the custom base image used by the devcontainer so we check against the correct repositories
+          docker build -t ghcr.io/jhulten/toolbox/base:local base
+          
+          # Check base Dockerfile (still uses debian:13-slim directly)
           base_results=$(check_dockerfile "base/Dockerfile" "debian:13-slim")
           
-          # Check devcontainer Dockerfile (needs base image built first, so use debian:13-slim as approximation)
-          devcontainer_results=$(check_dockerfile "devcontainer/Dockerfile" "debian:13-slim")
+          # Check devcontainer Dockerfile against the locally built custom base image
+          devcontainer_results=$(check_dockerfile "devcontainer/Dockerfile" "ghcr.io/jhulten/toolbox/base:local")
           
           # Combine results
           all_results=""
