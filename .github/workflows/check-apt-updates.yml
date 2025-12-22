@@ -32,7 +32,7 @@ jobs:
             echo "Checking $dockerfile..."
             
             # Extract pinned packages (format: package=version)
-            packages=$(grep -oP '(?<=\s)[a-z0-9\-]+=[0-9][^\s\\]+' "$dockerfile" || true)
+            packages=$(grep -oP '(?<=\s)[a-z0-9\-]+=[0-9][a-zA-Z0-9.:+~-]*' "$dockerfile" || true)
             
             if [ -z "$packages" ]; then
               echo "No pinned packages found in $dockerfile"
