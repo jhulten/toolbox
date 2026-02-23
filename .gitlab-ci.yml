@@ -1,0 +1,65 @@
+stages:
+  - build
+  - check
+
+variables:
+  BASE_IMAGE_REGISTRY: $CI_REGISTRY_IMAGE/base
+  DEVCONTAINER_IMAGE_REGISTRY: $CI_REGISTRY_IMAGE/devcontainer
+
+build-base:
+  stage: build
+  image: docker:24-cli
+  services:
+    - docker:24-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - |
+      docker build -t ${BASE_IMAGE_REGISTRY}:${CI_COMMIT_SHA:0:7} -t ${BASE_IMAGE_REGISTRY}:latest base/
+      docker push ${BASE_IMAGE_REGISTRY}:${CI_COMMIT_SHA:0:7}
+      docker push ${BASE_IMAGE_REGISTRY}:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - base/**
+  tags:
+    - docker
+
+build-devcontainer:
+  stage: build
+  image: docker:24-cli
+  services:
+    - docker:24-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build --build-arg BASE_IMAGE_TAG=${CI_COMMIT_SHA:0:7} -t ${DEVCONTAINER_IMAGE_REGISTRY}:${CI_COMMIT_SHA:0:7} -t ${DEVCONTAINER_IMAGE_REGISTRY}:latest devcontainer/
+    - docker push ${DEVCONTAINER_IMAGE_REGISTRY}:${CI_COMMIT_SHA:0:7}
+    - docker push ${DEVCONTAINER_IMAGE_REGISTRY}:latest
+  needs:
+    - job: build-base
+      artifacts: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - devcontainer/**
+  tags:
+    - docker
+
+check-apt-updates:
+  stage: check
+  image: docker:24-cli
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t local-base base/
+    - chmod +x scripts/check-apt-updates.sh
+    - ./scripts/check-apt-updates.sh
+  artifacts:
+    when: always
+    reports:
+      dotenv: variables.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  when: manual
+  tags:
+    - docker
