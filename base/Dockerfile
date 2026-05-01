@@ -16,6 +16,7 @@ COPY apt/mise.list /etc/apt/sources.list.d/
 RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
   curl=8.14.1-2+deb13u2 \
+  git=1:2.47.3-0+deb13u1 \
   zsh=5.9-8+b14 \
   mise=2025.12.12 &&\
   apt-get clean -y &&\

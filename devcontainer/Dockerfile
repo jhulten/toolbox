@@ -2,7 +2,7 @@ ARG BASE_IMAGE_TAG=latest
 FROM ghcr.io/jhulten/toolbox/base:${BASE_IMAGE_TAG}
 
 LABEL org.opencontainers.image.title="Toolbox Devcontainer"
-LABEL org.opencontainers.image.description="Development container image with git, SSH, GPG, and locale support"
+LABEL org.opencontainers.image.description="Development container image with SSH, GPG, and locale support"
 LABEL org.opencontainers.image.source="https://github.com/jhulten/toolbox/blob/main/devcontainer/Dockerfile"
 LABEL org.opencontainers.image.licenses="MIT"
 
@@ -12,7 +12,6 @@ USER root
 
 RUN apt-get update &&\
   apt-get install --no-install-recommends -y \
-  git=1:2.47.3-0+deb13u1 \
   openssh-client=1:10.0p1-7 \
   gnupg=2.4.7-21 \
   locales=2.41-12 &&\
