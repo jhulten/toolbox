@@ -20,6 +20,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      chezmoi_repo:
+        description: 'Dotfiles repository URL (optional, e.g. git@github.com:user/dotfiles.git)'
+        required: false
+        default: ''
 
 env:
   REGISTRY: ghcr.io
@@ -68,6 +73,16 @@ jobs:
             type=sha,prefix=sha-
             type=raw,value=latest,enable={{is_default_branch}}
 
+      # Optional: Load SSH key for private dotfiles repos accessed via SSH.
+      # Set DOTFILES_DEPLOY_KEY secret to a private SSH key with read access
+      # to the dotfiles repository, then pass CHEZMOI_REPO as a workflow
+      # dispatch input (e.g. git@github.com:user/dotfiles.git).
+      - name: Set up SSH agent for private dotfiles repo
+        if: ${{ secrets.DOTFILES_DEPLOY_KEY != '' && inputs.chezmoi_repo != '' }}
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DOTFILES_DEPLOY_KEY }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -77,6 +92,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BASE_IMAGE_TAG=${{ steps.base-tag.outputs.tag }}
+            CHEZMOI_REPO=${{ inputs.chezmoi_repo }}
+          # Mount the SSH agent socket when building with a private SSH repo
+          ssh: ${{ secrets.DOTFILES_DEPLOY_KEY != '' && inputs.chezmoi_repo != '' && 'default' || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
